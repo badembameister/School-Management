@@ -2,12 +2,34 @@
 School Management System — Flask API
 All endpoints served under /api/
 """
-import sqlite3, os, json
+import sqlite3, os, json, shutil
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-DB_PATH = "/tmp/school.db"
+# Chemins
+DB_NAME = "school.db"
+LOCAL_DB = os.path.join(os.path.dirname(__file__), DB_NAME)
+TMP_DB = os.path.join("/tmp", DB_NAME)
+
+def init_db():
+    # 1. Si la DB n'est pas encore dans /tmp, on la prépare
+    if not os.path.exists(TMP_DB):
+        # Si tu as déjà une DB dans ton dossier api/, on la copie
+        if os.path.exists(LOCAL_DB):
+            shutil.copy2(LOCAL_DB, TMP_DB)
+        else:
+            # Sinon, on crée une base vide et on lance le script SQL
+            conn = sqlite3.connect(TMP_DB)
+            # ... insère ici ton script CREATE TABLE habituel ...
+            conn.close()
+
+def get_conn():
+    init_db() # On vérifie la présence de la DB à chaque connexion
+    conn = sqlite3.connect(TMP_DB)
+    conn.execute("PRAGMA foreign_keys = ON")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 # ── Database ────────────────────────────────────────────
@@ -623,3 +645,4 @@ def dashboard():
     }
     conn.close()
     return jsonify(stats)
+
