@@ -1,11 +1,12 @@
 {
   "functions": {
     "api/index.py": {
-      "runtime": "@vercel/python@*"
+      "runtime": "@vercel/python"
     }
   },
   "routes": [
     { "src": "/(.*)", "dest": "api/index.py" }
   ]
 }
+
 
