@@ -1,4 +1,5 @@
 from database import get_connection
+from notifications import notify_parents_of_grade
 
 
 def _letter_grade(score):
@@ -115,6 +116,8 @@ def assign_grade(enrollment_id, score, remarks=""):
             )
         conn.commit()
         print(f"Grade assigned: {score:.1f} ({letter})")
+        # Auto-notify parents
+        notify_parents_of_grade(enrollment_id, score, letter, remarks)
     except Exception as e:
         print(f"Error: {e}")
     finally:
