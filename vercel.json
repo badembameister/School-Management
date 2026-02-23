@@ -10,12 +10,11 @@
     }
   ],
   "routes": [
-    {
-      { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
     { "source": "/(.*)", "destination": "/public/$1" }
-    }
   ]
 }
+
 
 
 
